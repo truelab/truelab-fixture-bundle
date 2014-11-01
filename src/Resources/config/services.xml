@@ -1,0 +1,93 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+
+    <services>
+
+        <!-- Property Analyzer -->
+        <service id="truelab_fixture.property_analyzer" class="Truelab\Bundle\FixtureBundle\Packer\PropertyAnalyzer" >
+            <argument type="service" id="doctrine.orm.entity_manager" />
+        </service>
+
+        <!-- Association Analyzer -->
+        <service id="truelab_fixture.association_analyzer" class="Truelab\Bundle\FixtureBundle\Packer\AssociationAnalyzer">
+            <argument type="service" id="doctrine.orm.entity_manager" />
+        </service>
+
+        <!-- ArrayParser -->
+        <service id="truelab_fixture.array_parser" class="Truelab\Bundle\FixtureBundle\Parser\ArrayParser"  />
+
+        <!-- Yaml Data Manager -->
+        <service id="truelab_fixture.yaml_data_manager" class="Truelab\Bundle\FixtureBundle\Parser\YamlDataManager">
+            <argument>%kernel.root_dir%</argument>
+        </service>
+
+        <!-- Packer -->
+        <service id="truelab_fixture.packer" class="Truelab\Bundle\FixtureBundle\Packer\Packer">
+            <argument type="service" id="truelab_fixture.property_analyzer" />
+        </service>
+
+        <!-- FullPacker -->
+        <service id="truelab_fixture.full_packer" class="Truelab\Bundle\FixtureBundle\Packer\FullPacker">
+            <argument type="service" id="truelab_fixture.property_analyzer" />
+            <argument type="service" id="truelab_fixture.association_analyzer" />
+        </service>
+
+        <!-- Association Packer -->
+        <service id="truelab_fixture.association_packer" class="Truelab\Bundle\FixtureBundle\Packer\AssociationPacker">
+            <argument type="service" id="truelab_fixture.association_analyzer" />
+            <argument type="service" id="doctrine.orm.entity_manager" />
+        </service>
+
+        <!-- Entity Manager -->
+        <service id="truelab_fixture.entity_manager" class="Truelab\Bundle\FixtureBundle\Entity\EntityManager">
+            <argument type="service" id="doctrine.orm.entity_manager" />
+        </service>
+
+        <!-- Fixture Manager -->
+        <service id="truelab_fixture.fixture_manager" class="Truelab\Bundle\FixtureBundle\Fixture\Manager\FixtureManager">
+            <argument type="service" id="truelab_fixture.array_parser" />
+            <argument type="service" id="truelab_fixture.packer" />
+            <argument type="service" id="truelab_fixture.entity_manager" />
+            <argument type="service" id="truelab_fixture.yaml_data_manager" />
+        </service>
+
+        <!-- Association Manager -->
+        <service id="truelab_fixture.association_manager" class="Truelab\Bundle\FixtureBundle\Fixture\Manager\FixtureManager">
+            <argument type="service" id="truelab_fixture.array_parser" />
+            <argument type="service" id="truelab_fixture.association_packer" />
+            <argument type="service" id="truelab_fixture.entity_manager" />
+            <argument type="service" id="truelab_fixture.yaml_data_manager" />
+        </service>
+
+        <!-- Full Fixture Manager -->
+        <service id="truelab_fixture.full_fixture_manager" class="Truelab\Bundle\FixtureBundle\Fixture\Manager\FixtureManager">
+            <argument type="service" id="truelab_fixture.array_parser" />
+            <argument type="service" id="truelab_fixture.full_packer" />
+            <argument type="service" id="truelab_fixture.entity_manager" />
+            <argument type="service" id="truelab_fixture.yaml_data_manager" />
+        </service>
+
+        <!-- ImportProcess  -->
+        <service id="truelab_fixture.import_process" class="Truelab\Bundle\FixtureBundle\Process\ImportFixtureProcess">
+            <argument type="service" id="truelab_fixture.fixture_manager" />
+            <argument type="service" id="truelab_fixture.association_manager" />
+            <argument type="service" id="truelab_fixture.purger" />
+        </service>
+
+        <!-- ExportProcess  -->
+        <service id="truelab_fixture.export_process" class="Truelab\Bundle\FixtureBundle\Process\ExportFixtureProcess">
+            <argument type="service" id="truelab_fixture.full_fixture_manager" />
+        </service>
+
+        <!-- Purger -->
+        <service id="truelab_fixture.purger" class="Truelab\Bundle\FixtureBundle\Purge\Purger">
+            <argument type="service" id="doctrine.orm.entity_manager" />
+        </service>
+
+    </services>
+
+</container>

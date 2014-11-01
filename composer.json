@@ -1,0 +1,15 @@
+{
+    "name": "truelab/fixture-bundle",
+    "description": "Import and export of fixtures",
+    "authors": [
+        {
+            "name": "oriodesign",
+            "email": "oriodesign@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload" : {
+        "psr-4": {"Truelab\\Bundle\\FixtureBundle\\" : "src/"}
+    }
+}
