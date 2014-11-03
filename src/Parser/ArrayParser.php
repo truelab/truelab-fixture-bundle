@@ -18,8 +18,8 @@ class ArrayParser implements ParserInterface
     {
         $fixturePack = new FixturePack();
         $fixturePack->setClassName($data['class']);
-        foreach ($data['fixtures'] as $fixtureData) {
-            $fixturePack->addFixture($this->decodeFixture($fixtureData));
+        foreach ($data['fixtures'] as $key => $fixtureData) {
+            $fixturePack->addFixture($this->decodeFixture($key, $fixtureData));
         }
 
         return $fixturePack;
@@ -39,19 +39,22 @@ class ArrayParser implements ParserInterface
         $data['fixtures'] = array();
         foreach ($fixtures as $fixture) {
             /** @var FixtureInterface $fixture */
-            $data['fixtures'][] = $this->encodeFixture($fixture);
+            $data['fixtures'][$fixture->getId()] = $this->encodeFixture($fixture);
         }
 
         return $data;
     }
 
     /**
+     * @param $key
      * @param $fixtureData
+     *
      * @return Fixture
      */
-    public function decodeFixture($fixtureData)
+    public function decodeFixture($key, $fixtureData)
     {
         $fixture = new Fixture();
+        $fixture->setId($key);
         foreach ($fixtureData as $key => $value) {
             $fixture->setProperty($key, $value);
         }

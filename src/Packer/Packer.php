@@ -10,6 +10,7 @@ use Truelab\Bundle\FixtureBundle\Fixture\Pack\FixturePack;
 use Truelab\Bundle\FixtureBundle\Fixture\Pack\FixturePackInterface;
 use Truelab\Bundle\FixtureBundle\Key\Method;
 use Truelab\Bundle\FixtureBundle\Key\Property;
+use Truelab\Bundle\FixtureBundle\Util\Identificator;
 
 class Packer implements PackerInterface
 {
@@ -69,9 +70,10 @@ class Packer implements PackerInterface
     {
         $fixturePack = new FixturePack();
         $fixturePack->setClassName($entityCollection->getClassName());
-
+        $identificator = new Identificator();
         foreach ($entityCollection->getEntities() as $entity) {
             $fixture = new Fixture();
+            $fixture->setId($identificator->getFromEntity($entity));
             $reflectionClass = new \ReflectionClass($entity);
             $reflectionProperties = $reflectionClass->getProperties();
             foreach ($reflectionProperties as $reflectionProperty) {

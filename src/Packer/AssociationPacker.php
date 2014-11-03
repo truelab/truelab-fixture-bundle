@@ -11,10 +11,12 @@ use Truelab\Bundle\FixtureBundle\Fixture\Pack\FixturePack;
 use Truelab\Bundle\FixtureBundle\Fixture\Pack\FixturePackInterface;
 use Truelab\Bundle\FixtureBundle\Key\Method;
 use Truelab\Bundle\FixtureBundle\Key\Property;
+use Truelab\Bundle\FixtureBundle\Util\Identificator;
 
 class AssociationPacker extends Packer
 {
     protected $entityManager;
+    protected $identificator;
 
     /**
      * __construct
@@ -23,6 +25,7 @@ class AssociationPacker extends Packer
     {
         $this->analyzers = array($associationAnalyzer);
         $this->entityManager = $entityManager;
+        $this->identificator = new Identificator();
     }
 
 
@@ -36,9 +39,10 @@ class AssociationPacker extends Packer
         $entityCollection = new EntityCollection();
         $className = $fixturePack->getClassName();
         $entityCollection->setClassName($className);
+        $idPropertyName = $this->identificator->getIdPropertyName($className);
         $repository = $this->entityManager->getRepository($className);
         foreach ($fixturePack->getFixtures() as $fixture) {
-            $entity = $repository->find($fixture->getProperty('id'));
+            $entity = $repository->findOneBy(array($idPropertyName=>$fixture->getId()));
             $reflectionClass = new \ReflectionClass($entity);
             $reflectionProperties = $reflectionClass->getProperties();
             foreach ($reflectionProperties as $reflectionProperty) {

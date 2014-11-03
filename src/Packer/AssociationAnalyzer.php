@@ -8,17 +8,20 @@ use Truelab\Bundle\FixtureBundle\Entity\EntityCollection;
 use Truelab\Bundle\FixtureBundle\Fixture\FixtureInterface;
 use Truelab\Bundle\FixtureBundle\Fixture\Pack\FixturePackInterface;
 use Truelab\Bundle\FixtureBundle\Key\Method;
+use Truelab\Bundle\FixtureBundle\Util\Identificator;
 
 class AssociationAnalyzer implements PropertyAnalyzerInterface
 {
 
     protected $entityManager;
     protected $metadataFactory;
+    protected $identificator;
 
     public function __construct(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
         $this->metadataFactory = $this->entityManager->getMetadataFactory();
+        $this->identificator = new Identificator();
     }
 
     /**
@@ -38,7 +41,7 @@ class AssociationAnalyzer implements PropertyAnalyzerInterface
         if ($classMetadata->isCollectionValuedAssociation($name)) {
             $this->setFixtureAssociations($fixture, $name, $value);
         } else if ($classMetadata->isSingleValuedAssociation($name)) {
-            $this->setFixtureAssociation($fixture, $name, $this->getPrettyId($value));
+            $this->setFixtureAssociation($fixture, $name, $value);
         }
     }
 
@@ -77,12 +80,11 @@ class AssociationAnalyzer implements PropertyAnalyzerInterface
     {
         try {
             $repository = $this->entityManager->getRepository($targetEntityClass);
-            $object = $repository->find($id);
-            if ($object) {
-                $reflectionProperty->setValue($entity, $object);
-            } else {
-                echo $targetEntityClass . ' ' . $id . PHP_EOL;
-            }
+            $idPropertyName = $this->identificator->getIdPropertyName($targetEntityClass);
+            $object = $repository->findOneBy(array($idPropertyName=>$id));
+
+            $reflectionProperty->setValue($entity, $object);
+
         } catch (\Exception $e) {
             echo $e->getMessage();
         }
@@ -99,9 +101,10 @@ class AssociationAnalyzer implements PropertyAnalyzerInterface
     {
         try {
             $repository = $this->entityManager->getRepository($targetEntityClass);
+            $idPropertyName = $this->identificator->getIdPropertyName($targetEntityClass);
             $collection = array();
             foreach ($ids as $id) {
-                $object = $repository->find($id);
+                $object = $repository->findOneBy(array($idPropertyName=>$id));
                 if ($object) {
                     $collection[] = $object;
                 } else {
@@ -124,7 +127,7 @@ class AssociationAnalyzer implements PropertyAnalyzerInterface
     {
         $ids = array();
         foreach ($value as $object) {
-            $ids[] = $this->getPrettyId($object);
+            $ids[] = $this->identificator->getFromEntity($object);
         }
         $fixture->setProperty($name, $ids);
     }
@@ -136,27 +139,10 @@ class AssociationAnalyzer implements PropertyAnalyzerInterface
      */
     public function setFixtureAssociation(FixtureInterface $fixture, $name, $value)
     {
-        if (!is_object($value)) {
-            $fixture->setProperty($name, $value);
-        } else if ($value instanceof \DateTime) {
-            $fixture->setProperty($name, $value->format(\DateTime::ISO8601));
+        if (!$value) {
+            return;
         }
+        $fixture->setProperty($name, $this->identificator->getFromEntity($value));
     }
 
-    /**
-     * @param  $object
-     * @return mixed
-     */
-    public function getPrettyId($object)
-    {
-        if (!$object) {
-            return null;
-        }
-        $reflectionClass = new \ReflectionClass($object);
-        if ($reflectionClass->hasMethod(Method::GET_PRETTY_ID)) {
-            // return $object->getPrettyId();
-        }
-
-        return $object->getId();
-    }
 }

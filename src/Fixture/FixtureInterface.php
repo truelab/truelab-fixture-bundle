@@ -5,6 +5,7 @@ namespace Truelab\Bundle\FixtureBundle\Fixture;
 interface FixtureInterface
 {
 
+
     /**
      * @param string $name
      * @param mixed $value
@@ -12,12 +13,44 @@ interface FixtureInterface
     public function setProperty($name, $value);
 
     /**
+     * @param $name
+     *
+     * @return null|mixed
+     */
+    public function getProperty($name);
+
+    /**
      * @return array
      */
     public function getProperties();
 
     /**
-     * @param $name
+     * @param string $shortName
      */
-    public function getProperty($name);
+    public function setShortName($shortName);
+
+    /**
+     * @return string
+     */
+    public function getShortName();
+
+    /**
+     * @param string $className
+     */
+    public function setClassName($className);
+
+    /**
+     * @return string
+     */
+    public function getClassName();
+
+    /**
+     * @param string $id
+     */
+    public function setId($id);
+
+    /**
+     * @return string
+     */
+    public function getId();
 }
