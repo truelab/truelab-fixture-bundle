@@ -7,12 +7,20 @@ use Truelab\Bundle\FixtureBundle\Entity\EntityCollectionInterface;
 use Truelab\Bundle\FixtureBundle\Fixture\Fixture;
 use Truelab\Bundle\FixtureBundle\Fixture\FixtureInterface;
 
+/**
+ * Class FixturePack
+ *
+ * @package Truelab\Bundle\FixtureBundle\Fixture\Pack
+ */
 class FixturePack implements FixturePackInterface
 {
     protected $fixtures;
     protected $shortName;
     protected $className;
 
+    /**
+     * __construct
+     */
     public function __construct()
     {
         $this->fixtures = array();
@@ -70,7 +78,8 @@ class FixturePack implements FixturePackInterface
     }
 
     /**
-     * @param $className
+     * @param string $className
+     *
      * @return mixed
      */
     protected function generateShortName($className)

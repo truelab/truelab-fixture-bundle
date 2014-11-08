@@ -26,6 +26,7 @@ class TruelabFixtureExtension extends Extension
             $config['classes']
         );
 
+
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');
     }

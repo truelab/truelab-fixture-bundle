@@ -11,6 +11,11 @@ use Truelab\Bundle\FixtureBundle\Fixture\Pack\FixturePackInterface;
 use Truelab\Bundle\FixtureBundle\Key\Method;
 use Truelab\Bundle\FixtureBundle\Key\Property;
 
+/**
+ * Class FullPacker
+ *
+ * @package Truelab\Bundle\FixtureBundle\Packer
+ */
 class FullPacker extends Packer
 {
 

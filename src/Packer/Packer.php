@@ -12,12 +12,17 @@ use Truelab\Bundle\FixtureBundle\Key\Method;
 use Truelab\Bundle\FixtureBundle\Key\Property;
 use Truelab\Bundle\FixtureBundle\Util\Identificator;
 
+/**
+ * Class Packer
+ *
+ * @package Truelab\Bundle\FixtureBundle\Packer
+ */
 class Packer implements PackerInterface
 {
     protected $analyzers;
 
     /**
-     * __construct
+     * @param PropertyAnalyzer $propertyAnalyzer
      */
     public function __construct(PropertyAnalyzer $propertyAnalyzer)
     {

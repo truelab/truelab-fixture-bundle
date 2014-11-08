@@ -4,23 +4,33 @@ namespace Truelab\Bundle\FixtureBundle\Packer;
 
 
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Mapping\Column;
-use Truelab\Bundle\FixtureBundle\Entity\EntityCollection;
 use Truelab\Bundle\FixtureBundle\Fixture\FixtureInterface;
-use Truelab\Bundle\FixtureBundle\Fixture\Pack\FixturePackInterface;
 
+/**
+ * Class PropertyAnalyzer
+ *
+ * @package Truelab\Bundle\FixtureBundle\Packer
+ */
 class PropertyAnalyzer implements PropertyAnalyzerInterface
 {
 
     protected $entityManager;
     protected $metadataFactory;
 
+    /**
+     * @param EntityManager $entityManager
+     */
     public function __construct(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
         $this->metadataFactory = $this->entityManager->getMetadataFactory();
     }
 
+    /**
+     * @param \ReflectionProperty $reflectionProperty
+     * @param FixtureInterface    $fixture
+     * @param mixed               $entity
+     */
     public function fromEntity(\ReflectionProperty $reflectionProperty, FixtureInterface $fixture, $entity)
     {
         $value = $reflectionProperty->getValue($entity);
@@ -34,6 +44,11 @@ class PropertyAnalyzer implements PropertyAnalyzerInterface
         $this->setFixtureProperty($fixture, $name, $value);
     }
 
+    /**
+     * @param \ReflectionProperty $reflectionProperty
+     * @param FixtureInterface    $fixture
+     * @param mixed               $entity
+     */
     public function fromFixture(\ReflectionProperty $reflectionProperty, FixtureInterface $fixture, $entity)
     {
         $name = $reflectionProperty->getName();
@@ -46,8 +61,8 @@ class PropertyAnalyzer implements PropertyAnalyzerInterface
 
     /**
      * @param FixtureInterface $fixture
-     * @param string $name
-     * @param string $value
+     * @param string           $name
+     * @param string           $value
      */
     public function setFixtureProperty(FixtureInterface $fixture, $name, $value)
     {
@@ -59,7 +74,7 @@ class PropertyAnalyzer implements PropertyAnalyzerInterface
     }
 
     /**
-     * @param $entity
+     * @param mixed               $entity
      * @param FixtureInterface    $fixture
      * @param \ReflectionProperty $reflectionProperty
      * @param string              $fieldType

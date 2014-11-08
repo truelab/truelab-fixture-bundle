@@ -47,43 +47,43 @@
             <argument type="service" id="doctrine.orm.entity_manager" />
         </service>
 
-        <!-- Fixture Manager -->
+        <!-- Fixture Manager (for import) -->
         <service id="truelab_fixture.fixture_manager" class="Truelab\Bundle\FixtureBundle\Fixture\Manager\FixtureManager">
             <argument type="service" id="truelab_fixture.array_parser" />
             <argument type="service" id="truelab_fixture.packer" />
             <argument type="service" id="truelab_fixture.entity_manager" />
             <argument type="service" id="truelab_fixture.yaml_data_manager" />
             <argument type="service" id="event_dispatcher" />
+            <tag name="truelab_fixture.import_fixture_manager" />
         </service>
 
-        <!-- Association Manager -->
+        <!-- Association Manager (for import) -->
         <service id="truelab_fixture.association_manager" class="Truelab\Bundle\FixtureBundle\Fixture\Manager\FixtureManager">
             <argument type="service" id="truelab_fixture.array_parser" />
             <argument type="service" id="truelab_fixture.association_packer" />
             <argument type="service" id="truelab_fixture.entity_manager" />
             <argument type="service" id="truelab_fixture.yaml_data_manager" />
             <argument type="service" id="event_dispatcher" />
+            <tag name="truelab_fixture.import_fixture_manager" />
         </service>
 
-        <!-- Full Fixture Manager -->
+        <!-- Full Fixture Manager (for export) -->
         <service id="truelab_fixture.full_fixture_manager" class="Truelab\Bundle\FixtureBundle\Fixture\Manager\FixtureManager">
             <argument type="service" id="truelab_fixture.array_parser" />
             <argument type="service" id="truelab_fixture.full_packer" />
             <argument type="service" id="truelab_fixture.entity_manager" />
             <argument type="service" id="truelab_fixture.yaml_data_manager" />
             <argument type="service" id="event_dispatcher" />
+            <tag name="truelab_fixture.export_fixture_manager" />
         </service>
 
         <!-- ImportProcess  -->
         <service id="truelab_fixture.import_process" class="Truelab\Bundle\FixtureBundle\Process\ImportFixtureProcess">
-            <argument type="service" id="truelab_fixture.fixture_manager" />
-            <argument type="service" id="truelab_fixture.association_manager" />
             <argument type="service" id="truelab_fixture.purger" />
         </service>
 
         <!-- ExportProcess  -->
         <service id="truelab_fixture.export_process" class="Truelab\Bundle\FixtureBundle\Process\ExportFixtureProcess">
-            <argument type="service" id="truelab_fixture.full_fixture_manager" />
         </service>
 
         <!-- Purger -->
