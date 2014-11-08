@@ -32,17 +32,21 @@ class AssociationPacker extends Packer
     /**
      * @param FixturePackInterface $fixturePack
      *
+     * @throws \Exception
      * @return mixed $entity
      */
     public function unpack(FixturePackInterface $fixturePack)
     {
-        $entityCollection = new EntityCollection();
+       $entityCollection = new EntityCollection();
         $className = $fixturePack->getClassName();
         $entityCollection->setClassName($className);
         $idPropertyName = $this->identificator->getIdPropertyName($className);
         $repository = $this->entityManager->getRepository($className);
         foreach ($fixturePack->getFixtures() as $fixture) {
             $entity = $repository->findOneBy(array($idPropertyName=>$fixture->getId()));
+            if (!$entity) {
+                throw new \Exception('Entity not found with id ' . $fixture->getProperty('id'));
+            }
             $reflectionClass = new \ReflectionClass($entity);
             $reflectionProperties = $reflectionClass->getProperties();
             foreach ($reflectionProperties as $reflectionProperty) {
@@ -52,7 +56,6 @@ class AssociationPacker extends Packer
                     $analyzer->fromFixture($reflectionProperty, $fixture, $entity);
                 }
             }
-
             $entityCollection->addEntity($entity);
         }
 

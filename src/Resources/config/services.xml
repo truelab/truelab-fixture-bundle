@@ -53,6 +53,7 @@
             <argument type="service" id="truelab_fixture.packer" />
             <argument type="service" id="truelab_fixture.entity_manager" />
             <argument type="service" id="truelab_fixture.yaml_data_manager" />
+            <argument type="service" id="event_dispatcher" />
         </service>
 
         <!-- Association Manager -->
@@ -61,6 +62,7 @@
             <argument type="service" id="truelab_fixture.association_packer" />
             <argument type="service" id="truelab_fixture.entity_manager" />
             <argument type="service" id="truelab_fixture.yaml_data_manager" />
+            <argument type="service" id="event_dispatcher" />
         </service>
 
         <!-- Full Fixture Manager -->
@@ -69,6 +71,7 @@
             <argument type="service" id="truelab_fixture.full_packer" />
             <argument type="service" id="truelab_fixture.entity_manager" />
             <argument type="service" id="truelab_fixture.yaml_data_manager" />
+            <argument type="service" id="event_dispatcher" />
         </service>
 
         <!-- ImportProcess  -->

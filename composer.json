@@ -8,6 +8,7 @@
         }
     ],
     "minimum-stability": "dev",
+    "license": "MIT",
     "require": {},
     "autoload" : {
         "psr-4": {"Truelab\\Bundle\\FixtureBundle\\" : "src/"}

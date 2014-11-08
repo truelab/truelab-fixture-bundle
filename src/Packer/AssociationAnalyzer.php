@@ -10,6 +10,11 @@ use Truelab\Bundle\FixtureBundle\Fixture\Pack\FixturePackInterface;
 use Truelab\Bundle\FixtureBundle\Key\Method;
 use Truelab\Bundle\FixtureBundle\Util\Identificator;
 
+/**
+ * Class AssociationAnalyzer
+ *
+ * @package Truelab\Bundle\FixtureBundle\Packer
+ */
 class AssociationAnalyzer implements PropertyAnalyzerInterface
 {
 
@@ -17,6 +22,9 @@ class AssociationAnalyzer implements PropertyAnalyzerInterface
     protected $metadataFactory;
     protected $identificator;
 
+    /**
+     * @param EntityManager $entityManager
+     */
     public function __construct(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
@@ -26,8 +34,8 @@ class AssociationAnalyzer implements PropertyAnalyzerInterface
 
     /**
      * @param \ReflectionProperty $reflectionProperty
-     * @param FixtureInterface $fixture
-     * @param $entity
+     * @param FixtureInterface    $fixture
+     * @param mixed               $entity
      */
     public function fromEntity(\ReflectionProperty $reflectionProperty, FixtureInterface $fixture, $entity)
     {
@@ -47,8 +55,8 @@ class AssociationAnalyzer implements PropertyAnalyzerInterface
 
     /**
      * @param \ReflectionProperty $reflectionProperty
-     * @param FixtureInterface $fixture
-     * @param $entity
+     * @param FixtureInterface    $fixture
+     * @param mixed               $entity
      */
     public function fromFixture(\ReflectionProperty $reflectionProperty, FixtureInterface $fixture, $entity)
     {
@@ -82,7 +90,6 @@ class AssociationAnalyzer implements PropertyAnalyzerInterface
             $repository = $this->entityManager->getRepository($targetEntityClass);
             $idPropertyName = $this->identificator->getIdPropertyName($targetEntityClass);
             $object = $repository->findOneBy(array($idPropertyName=>$id));
-
             $reflectionProperty->setValue($entity, $object);
 
         } catch (\Exception $e) {
@@ -108,7 +115,7 @@ class AssociationAnalyzer implements PropertyAnalyzerInterface
                 if ($object) {
                     $collection[] = $object;
                 } else {
-                    echo $targetEntityClass . ' ' . $id . PHP_EOL;
+                    throw new \Exception('Set Entity Associations object not found ' . $targetEntityClass . ' ' . $id);
                 }
             }
             $reflectionProperty->setValue($entity, $collection);
@@ -120,8 +127,8 @@ class AssociationAnalyzer implements PropertyAnalyzerInterface
 
     /**
      * @param FixtureInterface $fixture
-     * @param $name
-     * @param $value
+     * @param string           $name
+     * @param mixed            $value
      */
     public function setFixtureAssociations(FixtureInterface $fixture, $name, $value)
     {
@@ -134,8 +141,8 @@ class AssociationAnalyzer implements PropertyAnalyzerInterface
 
     /**
      * @param FixtureInterface $fixture
-     * @param string $name
-     * @param string $value
+     * @param string           $name
+     * @param string           $value
      */
     public function setFixtureAssociation(FixtureInterface $fixture, $name, $value)
     {
