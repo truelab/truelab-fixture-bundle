@@ -26,8 +26,10 @@ class Purger
 
         foreach($tables as $table) {
             $name = $table->getName();
-            $query .= 'TRUNCATE ' . $name . ';';
-            $query .= 'ALTER TABLE ' . $name . ' AUTO_INCREMENT = 1;';
+            if ($name[0] !== '_') {
+                $query .= 'TRUNCATE ' . $name . ';';
+                $query .= 'ALTER TABLE ' . $name . ' AUTO_INCREMENT = 1;';
+            }
         }
         $query .= 'SET FOREIGN_KEY_CHECKS=1;';
 
